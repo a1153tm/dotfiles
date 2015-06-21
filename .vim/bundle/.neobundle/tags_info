@@ -1,0 +1,17 @@
+VimClojure
+diffchar.vim
+neobundle.vim
+neocomplcache
+neosnippet
+nerdtree
+syntastic
+tcomment_vim
+unite.vim
+vim-endwise
+vim-fugitive
+vim-indent-guides
+vim-ruby
+vim-slime
+vim-surround
+vimproc
+vimshell
