@@ -12,23 +12,29 @@ set showcmd
 set incsearch
 set smartindent
 set cindent
-set noexpandtab
-set shiftwidth=4
-set ts=4
+set expandtab
+set shiftwidth=2
+set ts=2
 inoremap {<Enter> {}<Left><CR><ESC><S-o>
 inoremap [<Enter> []<Left><CR><ESC><S-o>
 inoremap (<Enter> ()<Left><CR><ESC><S-o>
+nnoremap Y
+
+if 0 | endif
 
 if has('vim_starting')
-  set nocompatible
-  set runtimepath+=~/.vim/bundle/neobundle.vim
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
 """"""""""""""""""""""""""""""
 " Plugins
 """"""""""""""""""""""""""""""
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'VimClojure'
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
@@ -45,10 +51,49 @@ NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'mhartington/oceanic-next'
 call neobundle#end()
-
+filetype plugin indent on
 NeoBundleCheck
+
+""""""""""""""""""""""""""""""
+" neocomplcache
+""""""""""""""""""""""""""""""
+"neocomplcache for auto completing
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : ''
+    \ }
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplcache#smart_close_popup() . "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 """"""""""""""""""""""""""""""
 " Unit.vim
@@ -84,7 +129,6 @@ endif
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
 autocmd BufEnter * lcd %:p:h
 
-filetype plugin indent on
 filetype indent on
 syntax on
 
@@ -107,9 +151,11 @@ let g:indent_guides_enable_on_vim_startup = 1
 """"""""""""""""""""""""""""""
 " Colors
 """"""""""""""""""""""""""""""
-"colorscheme hybrid 
-colorscheme solarized
+"colorscheme hybrid
+"colorscheme solarized
 "colorscheme zenburn
+colorscheme wombat
+"colorscheme OceanicNext
 
 """"""""""""""""""""""""""""""
 " Indent
@@ -128,3 +174,7 @@ augroup source-vimrc
   autocmd BufWritePost *gvimrc if has('gui_running') source $MYGVIMRC
 augroup END
 
+""""""""""""""""""""""""""""""
+" Commands
+""""""""""""""""""""""""""""""
+:command! Json :%!python -m json.tool
